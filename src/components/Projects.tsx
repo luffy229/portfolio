@@ -1,75 +1,21 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Code, Play, X, Zap } from 'lucide-react';
+import { ExternalLink, Code, Play, X, Zap, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { projectsData } from '../data/projectsData';
 
 interface ProjectsProps {
   hackerMode?: boolean;
+  limit?: number;
 }
 
-const Projects = ({ hackerMode = false }: ProjectsProps) => {
+const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [battleAnimation, setBattleAnimation] = useState(false);
   
-  // Sample project data
-  const projects = [
-    {
-      id: 1,
-      title: hackerMode ? 'E-Commerce System Hack' : 'E-Commerce Platform',
-      description: hackerMode ? 'Secured payment gateway with encrypted transactions.' : 'A full-stack e-commerce solution with payment integration.',
-      image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=1470&auto=format',
-      details: hackerMode 
-        ? 'Engineered a secure transaction system with multi-layer encryption. Implemented advanced security protocols with minimal performance impact.'
-        : 'Built with React, Node.js, and Stripe integration. Features include product search, filtering, user authentication, and order management.',
-      technologies: ['React', 'Node.js', 'MongoDB', 'Stripe API'],
-      links: {
-        live: 'https://example.com',
-        code: 'https://github.com'
-      }
-    },
-    {
-      id: 2,
-      title: hackerMode ? '3D Neural Interface' : '3D Portfolio Experience',
-      description: hackerMode ? 'A virtual dimension built on WebGL and neural mapping.' : 'An interactive 3D portfolio using WebGL and Three.js.',
-      image: 'https://images.unsplash.com/photo-1550439062-609e1531270e?q=80&w=1470&auto=format',
-      details: hackerMode
-        ? 'Created a digital environment that adapts to user behavior through machine learning algorithms. Neural mapping allows for intuitive navigation through complex data structures.'
-        : 'Interactive 3D environment that showcases projects in a virtual space. Users can navigate through different rooms representing various skills and projects.',
-      technologies: ['Three.js', 'WebGL', 'GSAP', 'React'],
-      links: {
-        live: 'https://example.com',
-        code: 'https://github.com'
-      }
-    },
-    {
-      id: 3,
-      title: hackerMode ? 'Neural Network Chat' : 'AI-Powered Chat App',
-      description: hackerMode ? 'A neural framework with predictive communication patterns.' : 'A messaging platform with AI-powered response suggestions.',
-      image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?q=80&w=1506&auto=format',
-      details: hackerMode
-        ? 'Developed a self-adapting AI system that learns from conversation patterns and predicts optimal responses. Features quantum encryption for secure communications.'
-        : 'Real-time chat application that uses AI to suggest responses and analyze sentiment. Features include group chats, file sharing, and message translation.',
-      technologies: ['React', 'Firebase', 'TensorFlow.js', 'WebSockets'],
-      links: {
-        live: 'https://example.com',
-        code: 'https://github.com'
-      }
-    },
-    {
-      id: 4,
-      title: hackerMode ? 'Modular UI Framework' : 'Design System Library',
-      description: hackerMode ? 'A dynamic component ecosystem for rapid deployment.' : 'A comprehensive component library for rapid development.',
-      image: 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?q=80&w=1374&auto=format',
-      details: hackerMode
-        ? 'Engineered a self-generating UI framework that adapts to usage patterns and optimizes component relationships. Utilizes machine learning for predictive styling.'
-        : 'A fully documented design system with 50+ components, theming support, and accessibility features. Used by multiple teams for consistent UI development.',
-      technologies: ['React', 'Storybook', 'TypeScript', 'SCSS'],
-      links: {
-        live: 'https://example.com',
-        code: 'https://github.com'
-      }
-    }
-  ];
+  // Filter projects based on limit
+  const projects = limit ? projectsData.slice(0, limit) : projectsData;
   
   // Open project detail view with battle animation
   const openProject = (id: number) => {
@@ -157,6 +103,35 @@ const Projects = ({ hackerMode = false }: ProjectsProps) => {
             </motion.div>
           ))}
         </div>
+        
+        {limit && (
+          <motion.div 
+            className="flex justify-center mt-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Link to="/projects">
+              <motion.button
+                className={`manga-button flex items-center gap-2 ${
+                  hackerMode ? 'bg-neon-pink text-manga-black' : 'bg-manga-red text-white'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  // Play sound effect
+                  const audio = new Audio(hackerMode
+                    ? 'https://www.soundjay.com/technology/sounds/electronic-1.mp3'
+                    : 'https://www.soundjay.com/page-flip-sounds/page-flip-01a.mp3');
+                  audio.play().catch(e => console.log('Audio play failed:', e));
+                }}
+              >
+                {hackerMode ? 'VIEW ALL MISSIONS' : 'VIEW ALL ADVENTURES'} 
+                <ArrowRight size={18} />
+              </motion.button>
+            </Link>
+          </motion.div>
+        )}
       </div>
       
       {/* Battle Animation Overlay */}
@@ -226,7 +201,7 @@ const Projects = ({ hackerMode = false }: ProjectsProps) => {
             >
               {/* Find the selected project */}
               {(() => {
-                const project = projects.find(p => p.id === selectedProject);
+                const project = projectsData.find(p => p.id === selectedProject);
                 if (!project) return null;
                 
                 return (
@@ -300,6 +275,22 @@ const Projects = ({ hackerMode = false }: ProjectsProps) => {
                           <Code size={20} />
                           <span>{hackerMode ? 'Source Code' : 'View Code'}</span>
                         </a>
+                        <Link 
+                          to={`/project/${project.id}`} 
+                          className={`manga-button flex items-center gap-2 ${
+                            hackerMode ? 'bg-neon-green text-manga-black' : 'bg-manga-blue text-white'
+                          }`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const audio = new Audio(hackerMode
+                              ? 'https://www.soundjay.com/technology/sounds/electronic-3.mp3'
+                              : 'https://www.soundjay.com/page-flip-sounds/page-flip-03a.mp3');
+                            audio.play().catch(e => console.log('Audio play failed:', e));
+                          }}
+                        >
+                          <ExternalLink size={20} />
+                          <span>{hackerMode ? 'DETAILED ANALYSIS' : 'Full Details'}</span>
+                        </Link>
                       </div>
                     </div>
                   </div>

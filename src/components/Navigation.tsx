@@ -2,13 +2,15 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Home, User, Briefcase, Mail, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface NavigationProps {
   currentSection: string;
   onNavigate: (section: string) => void;
+  hackerMode?: boolean;
 }
 
-const Navigation = ({ currentSection, onNavigate }: NavigationProps) => {
+const Navigation = ({ currentSection, onNavigate, hackerMode = false }: NavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   const toggleMenu = () => {
@@ -53,7 +55,7 @@ const Navigation = ({ currentSection, onNavigate }: NavigationProps) => {
       {/* Mobile Navigation */}
       <div className="fixed top-4 right-4 z-40 md:hidden">
         <button 
-          className="manga-button p-2"
+          className={`manga-button p-2 ${hackerMode ? 'bg-neon-cyan text-manga-black' : ''}`}
           onClick={toggleMenu}
           aria-label="Toggle menu"
         >
@@ -62,7 +64,7 @@ const Navigation = ({ currentSection, onNavigate }: NavigationProps) => {
         
         {isMenuOpen && (
           <motion.div 
-            className="fixed inset-0 bg-manga-black/90 z-30 flex flex-col items-center justify-center"
+            className={`fixed inset-0 ${hackerMode ? 'bg-manga-black/95' : 'bg-manga-black/90'} z-30 flex flex-col items-center justify-center`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
@@ -73,16 +75,37 @@ const Navigation = ({ currentSection, onNavigate }: NavigationProps) => {
                 <motion.button
                   key={item.id}
                   className={`manga-button flex items-center space-x-2 ${
-                    currentSection === item.id ? 'bg-manga-red text-white' : ''
+                    currentSection === item.id 
+                      ? hackerMode 
+                        ? 'bg-neon-pink text-manga-black' 
+                        : 'bg-manga-red text-white'
+                      : hackerMode
+                        ? 'bg-manga-black text-neon-cyan border border-neon-cyan'
+                        : ''
                   }`}
                   onClick={() => handleNavigate(item.id)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   {item.icon}
-                  <span>{item.label}</span>
+                  <span>{hackerMode ? item.label.toUpperCase() : item.label}</span>
                 </motion.button>
               ))}
+              
+              <motion.button
+                className={`manga-button flex items-center space-x-2 ${
+                  hackerMode 
+                    ? 'bg-neon-green text-manga-black' 
+                    : 'bg-manga-yellow text-manga-black'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link to="/projects" className="flex items-center gap-2">
+                  <Briefcase size={18} />
+                  <span>{hackerMode ? 'ALL PROJECTS' : 'View All Projects'}</span>
+                </Link>
+              </motion.button>
             </div>
           </motion.div>
         )}
@@ -91,7 +114,7 @@ const Navigation = ({ currentSection, onNavigate }: NavigationProps) => {
       {/* Desktop Navigation */}
       <div className="fixed top-0 left-0 w-full z-40 hidden md:block">
         <motion.div 
-          className="flex justify-center py-6 bg-white border-b-4 border-manga-black"
+          className={`flex justify-center py-6 ${hackerMode ? 'bg-manga-black border-b border-neon-cyan' : 'bg-white border-b-4 border-manga-black'}`}
           initial={{ y: -100 }}
           animate={{ y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
@@ -101,19 +124,25 @@ const Navigation = ({ currentSection, onNavigate }: NavigationProps) => {
               <div key={item.id} className="relative perspective">
                 <motion.button
                   className={`manga-button flex items-center space-x-2 ${
-                    currentSection === item.id ? 'bg-manga-red text-white' : ''
+                    currentSection === item.id 
+                      ? hackerMode 
+                        ? 'bg-neon-pink text-manga-black' 
+                        : 'bg-manga-red text-white'
+                      : hackerMode
+                        ? 'bg-manga-black text-neon-cyan border border-neon-cyan'
+                        : ''
                   }`}
                   onClick={() => handleNavigate(item.id)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   {item.icon}
-                  <span>{item.label}</span>
+                  <span>{hackerMode ? item.label.toUpperCase() : item.label}</span>
                 </motion.button>
                 
                 {/* Preview Panel */}
                 <motion.div
-                  className="absolute top-full left-0 mt-2 w-40 h-24 opacity-0 pointer-events-none manga-card overflow-hidden"
+                  className={`absolute top-full left-0 mt-2 w-40 h-24 opacity-0 pointer-events-none manga-card overflow-hidden ${hackerMode ? 'border border-neon-cyan' : ''}`}
                   style={{
                     transformOrigin: 'top center'
                   }}
@@ -126,16 +155,33 @@ const Navigation = ({ currentSection, onNavigate }: NavigationProps) => {
                   <img 
                     src={item.preview} 
                     alt={item.label} 
-                    className="w-full h-full object-cover"
+                    className={`w-full h-full object-cover ${hackerMode ? 'hue-rotate-180 contrast-125' : ''}`}
                   />
                   <div className="absolute inset-0 bg-manga-black/20 flex items-center justify-center">
-                    <span className="font-manga text-white text-stroke text-xl">
-                      {item.label}
+                    <span className={`font-manga text-white text-stroke text-xl ${hackerMode ? 'text-neon-cyan' : ''}`}>
+                      {hackerMode ? item.label.toUpperCase() : item.label}
                     </span>
                   </div>
                 </motion.div>
               </div>
             ))}
+            
+            <div className="relative perspective">
+              <motion.button
+                className={`manga-button flex items-center space-x-2 ${
+                  hackerMode 
+                    ? 'bg-neon-green text-manga-black' 
+                    : 'bg-manga-yellow text-manga-black'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link to="/projects" className="flex items-center gap-2">
+                  <Briefcase size={18} />
+                  <span>{hackerMode ? 'ALL PROJECTS' : 'View All Projects'}</span>
+                </Link>
+              </motion.button>
+            </div>
           </div>
         </motion.div>
       </div>

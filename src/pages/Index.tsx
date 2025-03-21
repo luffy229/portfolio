@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Lenis from '@studio-freight/lenis';
 import LoadingScreen from '../components/LoadingScreen';
@@ -25,9 +25,6 @@ const Index = () => {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: 'vertical',
-      gestureDirection: 'vertical',
-      smooth: true,
       smoothTouch: false,
       touchMultiplier: 2,
     });
@@ -91,6 +88,14 @@ const Index = () => {
     }
   };
 
+  // Check for stored hacker mode on initial load
+  useEffect(() => {
+    const storedHackerMode = localStorage.getItem('hackerMode');
+    if (storedHackerMode === 'true') {
+      setHackerMode(true);
+    }
+  }, []);
+
   // Konami code detection (↑↑↓↓←→←→BA)
   useEffect(() => {
     const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
@@ -104,13 +109,18 @@ const Index = () => {
       
       // Check if konami code is entered
       if (newKonami.join('') === konamiCode.join('')) {
-        setHackerMode(prev => !prev);
+        const newHackerMode = !hackerMode;
+        setHackerMode(newHackerMode);
+        
+        // Save hacker mode to localStorage
+        localStorage.setItem('hackerMode', newHackerMode.toString());
+        
         const audio = new Audio('https://www.soundjay.com/nature/sounds/magical-effect-1.mp3');
         audio.play().catch(e => console.log('Audio play failed:', e));
         
         toast({
-          title: hackerMode ? "Hacker Mode Deactivated" : "Hacker Mode Activated!",
-          description: hackerMode ? "Returning to normal manga mode" : "You've unlocked the secret cyber-manga dimension!",
+          title: newHackerMode ? "Hacker Mode Activated!" : "Hacker Mode Deactivated",
+          description: newHackerMode ? "You've unlocked the secret cyber-manga dimension!" : "Returning to normal manga mode",
           variant: "default",
         });
       }
@@ -253,7 +263,7 @@ const Index = () => {
           
           {/* Projects Section */}
           <section id="projects-section">
-            <Projects hackerMode={hackerMode} />
+            <Projects hackerMode={hackerMode} limit={4} />
           </section>
           
           {/* Contact Section */}

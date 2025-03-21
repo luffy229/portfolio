@@ -1,3 +1,6 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,97 +8,169 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 0 0% 3.9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 3.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 3.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 0 72.2% 50.6%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 72.2% 50.6%;
 
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-}
-
-@layer base {
   * {
-    @apply border-border;
+    @apply border-border box-border;
+  }
+  
+  html, body {
+    @apply m-0 p-0 overflow-x-hidden;
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  .panel {
+    @apply bg-white border-4 border-manga-black;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    @apply border-[8px] border-white -z-10;
+    transform: translate(10px, 10px);
+  }
+
+  .manga-title {
+    @apply font-manga text-manga-black text-5xl sm:text-6xl md:text-7xl text-center;
+    -webkit-text-stroke: 1px black;
+    text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  }
+
+  .panel-title {
+    @apply font-manga text-manga-black text-3xl md:text-4xl;
+    -webkit-text-stroke: 0.5px black;
+    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  }
+
+  .speech-bubble {
+    @apply bg-white border-2 border-manga-black p-4 relative;
+  }
+  
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 20px;
+    border-width: 20px 0 0 20px;
+    border-style: solid;
+    border-color: transparent transparent transparent #000;
+    filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.1));
+  }
+
+  .sound-effect {
+    @apply font-manga text-4xl md:text-5xl text-manga-red rotate-3 opacity-0;
+    transition: opacity 0.3s, transform 0.5s;
+    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    transform-origin: center;
+  }
+
+  .manga-button {
+    @apply font-manga bg-manga-yellow text-manga-black px-6 py-3 text-xl border-4 border-manga-black transform transition-transform relative;
+    box-shadow: 0 4px 0 #000;
+  }
+  
+  .manga-button:hover {
+    @apply transform translate-y-1;
+    box-shadow: 0 2px 0 #000;
+  }
+  
+  .manga-button:active {
+    @apply transform translate-y-2;
+    box-shadow: 0 0 0 #000;
+  }
+
+  .ink-splash {
+    @apply absolute bg-manga-black rounded-full opacity-0;
+    mix-blend-mode: multiply;
+  }
+
+  .exp-bar-container {
+    @apply w-full h-4 bg-white border-2 border-manga-black rounded-full overflow-hidden;
+  }
+  
+  .exp-bar {
+    @apply h-full bg-manga-blue transition-all duration-1000 ease-out;
+    width: 0%;
+  }
+
+  .progress-bar-container {
+    @apply w-full h-6 bg-white border-2 border-manga-black rounded-full overflow-hidden;
+  }
+  
+  .progress-bar {
+    @apply h-full bg-manga-yellow transition-all duration-1000 ease-out;
+    width: 0%;
+  }
+
+  .manga-card {
+    @apply bg-white border-4 border-manga-black rounded-lg;
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .manga-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 12px 12px 0 rgba(0, 0, 0, 1);
+  }
+}
+
+@layer utilities {
+  .clip-panel {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 85% 100%, 0% 100%);
+  }
+  
+  .clip-diagonal {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 85%);
+  }
+  
+  .perspective {
+    perspective: 1000px;
+  }
+  
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  
+  .backface-hidden {
+    backface-visibility: hidden;
   }
 }

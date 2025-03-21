@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -36,6 +36,19 @@
     --ring: 0 72.2% 50.6%;
 
     --radius: 0.5rem;
+
+    /* Manga theme colors */
+    --manga-black: #000000;
+    --manga-white: #FFFDF4;
+    --manga-red: #FF3A3A;
+    --manga-blue: #3A85FF;
+    --manga-yellow: #FFD23A;
+    
+    /* Cyberpunk neon colors for hacker mode */
+    --neon-cyan: #00FFFF;
+    --neon-pink: #FF00FF;
+    --neon-green: #00FF00;
+    --neon-yellow: #FFFF00;
   }
 
   * {
@@ -151,6 +164,59 @@
     transform: translate(-4px, -4px);
     box-shadow: 12px 12px 0 rgba(0, 0, 0, 1);
   }
+  
+  /* Hacker Mode styles */
+  .hacker-mode {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  
+  .glitch-text {
+    position: relative;
+    display: inline-block;
+    animation: glitch 1s infinite;
+  }
+  
+  @keyframes glitch {
+    0% {
+      transform: skew(0deg);
+      text-shadow: -2px 0 #00ffff, 2px 0 #ff00ff;
+    }
+    20% {
+      transform: skew(0deg);
+      text-shadow: -2px 0 #00ffff, 2px 0 #ff00ff;
+    }
+    21% {
+      transform: skew(10deg);
+      text-shadow: -4px 0 #00ffff, 4px 0 #ff00ff;
+    }
+    40% {
+      transform: skew(0deg);
+      text-shadow: -2px 0 #00ffff, 2px 0 #ff00ff;
+    }
+    41% {
+      transform: skew(-10deg);
+      text-shadow: 4px 0 #00ffff, -4px 0 #ff00ff;
+    }
+    60% {
+      transform: skew(0deg);
+      text-shadow: -2px 0 #00ffff, 2px 0 #ff00ff;
+    }
+    80% {
+      transform: skew(0deg);
+      text-shadow: -2px 0 #00ffff, 2px 0 #ff00ff;
+    }
+    100% {
+      transform: skew(0deg);
+      text-shadow: -2px 0 #00ffff, 2px 0 #ff00ff;
+    }
+  }
+
+  .cyber-grid {
+    background-image: 
+      linear-gradient(to right, rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
 }
 
 @layer utilities {
@@ -173,4 +239,127 @@
   .backface-hidden {
     backface-visibility: hidden;
   }
+  
+  .glitch {
+    animation: glitch 0.4s linear infinite;
+  }
+  
+  .scan-line {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 255, 255, 0.2) 50%,
+      transparent 100%
+    );
+    background-size: 100% 4px;
+    background-repeat: repeat-y;
+    animation: scan 6s linear infinite;
+  }
+  
+  @keyframes scan {
+    0% {
+      background-position: 0 -100vh;
+    }
+    100% {
+      background-position: 0 100vh;
+    }
+  }
+}
+
+/* Font definitions */
+.font-manga {
+  font-family: 'Bangers', cursive;
+  letter-spacing: 1px;
+}
+
+/* Neon text for hacker mode */
+.text-neon-cyan {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan);
+}
+
+.text-neon-pink {
+  color: var(--neon-pink);
+  text-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink);
+}
+
+.text-neon-green {
+  color: var(--neon-green);
+  text-shadow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green);
+}
+
+.text-neon-yellow {
+  color: var(--neon-yellow);
+  text-shadow: 0 0 5px var(--neon-yellow), 0 0 10px var(--neon-yellow);
+}
+
+.bg-neon-cyan {
+  background-color: var(--neon-cyan);
+}
+
+.bg-neon-pink {
+  background-color: var(--neon-pink);
+}
+
+.bg-neon-green {
+  background-color: var(--neon-green);
+}
+
+.bg-neon-yellow {
+  background-color: var(--neon-yellow);
+}
+
+.border-neon-cyan {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 5px var(--neon-cyan);
+}
+
+.border-neon-pink {
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 5px var(--neon-pink);
+}
+
+.border-neon-green {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 5px var(--neon-green);
+}
+
+.bg-manga-black {
+  background-color: var(--manga-black);
+}
+
+.bg-manga-white {
+  background-color: var(--manga-white);
+}
+
+.bg-manga-red {
+  background-color: var(--manga-red);
+}
+
+.bg-manga-blue {
+  background-color: var(--manga-blue);
+}
+
+.bg-manga-yellow {
+  background-color: var(--manga-yellow);
+}
+
+.text-manga-black {
+  color: var(--manga-black);
+}
+
+.text-manga-red {
+  color: var(--manga-red);
+}
+
+.text-manga-blue {
+  color: var(--manga-blue);
+}
+
+.text-manga-yellow {
+  color: var(--manga-yellow);
+}
+
+.border-manga-black {
+  border-color: var(--manga-black);
 }

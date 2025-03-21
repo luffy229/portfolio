@@ -4,7 +4,11 @@ import { motion } from 'framer-motion';
 import { Send, Github, Linkedin, Twitter, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-const Contact = () => {
+interface ContactProps {
+  hackerMode?: boolean;
+}
+
+const Contact = ({ hackerMode = false }: ContactProps) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -26,8 +30,10 @@ const Contact = () => {
     setTimeout(() => {
       // Show success toast
       toast({
-        title: "Message sent!",
-        description: "Thanks for reaching out. I'll get back to you soon!",
+        title: hackerMode ? "Message encrypted and sent!" : "Message sent!",
+        description: hackerMode 
+          ? "Secure transmission complete. Awaiting response on encrypted channel." 
+          : "Thanks for reaching out. I'll get back to you soon!",
         variant: "default",
       });
       
@@ -41,7 +47,9 @@ const Contact = () => {
       setIsSubmitting(false);
       
       // Play sound effect
-      const audio = new Audio('https://www.soundjay.com/buttons/button-09.mp3');
+      const audio = new Audio(hackerMode 
+        ? 'https://www.soundjay.com/buttons/sounds/button-43.mp3'
+        : 'https://www.soundjay.com/buttons/button-09.mp3');
       audio.play().catch(e => console.log('Audio play failed:', e));
     }, 1500);
   };
@@ -55,33 +63,33 @@ const Contact = () => {
   ];
 
   return (
-    <div className="min-h-screen py-24 px-4">
+    <div className={`min-h-screen py-24 px-4 ${hackerMode ? 'bg-manga-black/50' : ''}`}>
       <div className="container mx-auto">
         <motion.h2 
-          className="manga-title text-center mb-16 text-manga-blue"
+          className={`manga-title text-center mb-16 ${hackerMode ? 'text-neon-green' : 'text-manga-blue'}`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          CONNECT WITH ME
+          {hackerMode ? 'ESTABLISH CONNECTION' : 'CONNECT WITH ME'}
         </motion.h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Contact Form */}
           <motion.div 
-            className="panel p-8"
+            className={`panel p-8 ${hackerMode ? 'border-neon-cyan bg-manga-black/70' : ''}`}
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h3 className="panel-title text-manga-red mb-6">
-              SEND A MESSAGE
+            <h3 className={`panel-title ${hackerMode ? 'text-neon-pink' : 'text-manga-red'} mb-6`}>
+              {hackerMode ? 'TRANSMIT MESSAGE' : 'SEND A MESSAGE'}
             </h3>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block font-manga mb-2">
-                  YOUR NAME
+                <label htmlFor="name" className={`block font-manga mb-2 ${hackerMode ? 'text-neon-cyan' : ''}`}>
+                  {hackerMode ? 'YOUR IDENTITY' : 'YOUR NAME'}
                 </label>
                 <input
                   type="text"
@@ -90,13 +98,17 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full p-3 border-4 border-manga-black focus:outline-none focus:ring-2 focus:ring-manga-red"
+                  className={`w-full p-3 ${
+                    hackerMode 
+                      ? 'bg-manga-black/70 border-4 border-neon-cyan text-neon-green focus:ring-neon-pink' 
+                      : 'border-4 border-manga-black focus:ring-manga-red'
+                  } focus:outline-none focus:ring-2`}
                 />
               </div>
               
               <div>
-                <label htmlFor="email" className="block font-manga mb-2">
-                  YOUR EMAIL
+                <label htmlFor="email" className={`block font-manga mb-2 ${hackerMode ? 'text-neon-cyan' : ''}`}>
+                  {hackerMode ? 'YOUR COMM CHANNEL' : 'YOUR EMAIL'}
                 </label>
                 <input
                   type="email"
@@ -105,13 +117,17 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full p-3 border-4 border-manga-black focus:outline-none focus:ring-2 focus:ring-manga-red"
+                  className={`w-full p-3 ${
+                    hackerMode 
+                      ? 'bg-manga-black/70 border-4 border-neon-cyan text-neon-green focus:ring-neon-pink' 
+                      : 'border-4 border-manga-black focus:ring-manga-red'
+                  } focus:outline-none focus:ring-2`}
                 />
               </div>
               
               <div>
-                <label htmlFor="message" className="block font-manga mb-2">
-                  YOUR MESSAGE
+                <label htmlFor="message" className={`block font-manga mb-2 ${hackerMode ? 'text-neon-cyan' : ''}`}>
+                  {hackerMode ? 'YOUR DATA PACKET' : 'YOUR MESSAGE'}
                 </label>
                 <textarea
                   id="message"
@@ -120,16 +136,26 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   rows={5}
-                  className="w-full p-3 border-4 border-manga-black focus:outline-none focus:ring-2 focus:ring-manga-red"
+                  className={`w-full p-3 ${
+                    hackerMode 
+                      ? 'bg-manga-black/70 border-4 border-neon-cyan text-neon-green focus:ring-neon-pink' 
+                      : 'border-4 border-manga-black focus:ring-manga-red'
+                  } focus:outline-none focus:ring-2`}
                 />
               </div>
               
               <button 
                 type="submit" 
-                className="manga-button bg-manga-red text-white flex items-center gap-2"
+                className={`manga-button ${
+                  hackerMode 
+                    ? 'bg-neon-green text-manga-black' 
+                    : 'bg-manga-red text-white'
+                } flex items-center gap-2`}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'SENDING...' : 'SEND MESSAGE'}
+                {isSubmitting 
+                  ? hackerMode ? 'ENCRYPTING...' : 'SENDING...' 
+                  : hackerMode ? 'TRANSMIT DATA' : 'SEND MESSAGE'}
                 <Send size={20} />
               </button>
             </form>
@@ -142,14 +168,16 @@ const Contact = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <div className="panel p-8">
-              <h3 className="panel-title text-manga-yellow mb-6">
-                LET'S CONNECT
+            <div className={`panel p-8 ${hackerMode ? 'border-neon-pink bg-manga-black/70' : ''}`}>
+              <h3 className={`panel-title ${hackerMode ? 'text-neon-pink' : 'text-manga-yellow'} mb-6`}>
+                {hackerMode ? 'OPEN CHANNELS' : 'LET\'S CONNECT'}
               </h3>
               
-              <div className="speech-bubble mb-8">
-                <p className="font-manga text-lg">
-                  Looking to collaborate on a project or just want to say hi? I'd love to hear from you!
+              <div className={`speech-bubble mb-8 ${hackerMode ? 'border-neon-green bg-manga-black/70 text-neon-green' : ''}`}>
+                <p className={`${hackerMode ? 'font-mono' : 'font-manga'} text-lg`}>
+                  {hackerMode 
+                    ? '> Secure channels available for project collaboration and communication requests.' 
+                    : 'Looking to collaborate on a project or just want to say hi? I\'d love to hear from you!'}
                 </p>
               </div>
               
@@ -160,8 +188,13 @@ const Contact = () => {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="manga-button flex flex-col items-center px-4 py-4"
-                    whileHover={{ scale: 1.05 }}
+                    className={`manga-button flex flex-col items-center px-4 py-4 ${
+                      hackerMode ? 'border-neon-cyan text-neon-cyan' : ''
+                    }`}
+                    whileHover={{ 
+                      scale: 1.05,
+                      boxShadow: hackerMode ? '0 0 10px rgba(0, 255, 255, 0.8)' : undefined
+                    }}
                     whileTap={{ scale: 0.95 }}
                   >
                     {link.icon}
@@ -171,32 +204,38 @@ const Contact = () => {
               </div>
             </div>
             
-            <div className="panel p-8">
-              <h3 className="panel-title text-manga-blue mb-6">
-                AVAILABILITY
+            <div className={`panel p-8 ${hackerMode ? 'border-neon-cyan bg-manga-black/70' : ''}`}>
+              <h3 className={`panel-title ${hackerMode ? 'text-neon-cyan' : 'text-manga-blue'} mb-6`}>
+                {hackerMode ? 'SYSTEM STATUS' : 'AVAILABILITY'}
               </h3>
               
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
+                <div className={`flex items-center gap-2 ${hackerMode ? 'text-white' : ''}`}>
                   <div className="w-4 h-4 rounded-full bg-green-500"></div>
                   <div>
-                    <p className="font-manga">FREELANCE</p>
+                    <p className={`font-manga ${hackerMode ? 'text-neon-green' : ''}`}>
+                      {hackerMode ? 'CONTRACT STATUS' : 'FREELANCE'}
+                    </p>
                     <p>Available for new projects</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className={`flex items-center gap-2 ${hackerMode ? 'text-white' : ''}`}>
                   <div className="w-4 h-4 rounded-full bg-yellow-500"></div>
                   <div>
-                    <p className="font-manga">RESPONSE TIME</p>
+                    <p className={`font-manga ${hackerMode ? 'text-neon-yellow' : ''}`}>
+                      {hackerMode ? 'RESPONSE TIME' : 'RESPONSE TIME'}
+                    </p>
                     <p>Usually within 24 hours</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className={`flex items-center gap-2 ${hackerMode ? 'text-white' : ''}`}>
                   <div className="w-4 h-4 rounded-full bg-blue-500"></div>
                   <div>
-                    <p className="font-manga">LOCATION</p>
+                    <p className={`font-manga ${hackerMode ? 'text-neon-cyan' : ''}`}>
+                      {hackerMode ? 'LOCATION STATUS' : 'LOCATION'}
+                    </p>
                     <p>Available for remote work worldwide</p>
                   </div>
                 </div>

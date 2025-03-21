@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, Code, PaintBucket, Globe } from 'lucide-react';
+import { useIsMobile } from '../hooks/use-mobile';
 
 interface AboutProps {
   hackerMode?: boolean;
@@ -12,6 +13,7 @@ const About = ({ hackerMode = false }: AboutProps) => {
   const [powerLevel, setPowerLevel] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const soundEffectRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   
   // Scroll effect for power level
   useEffect(() => {
@@ -118,7 +120,7 @@ const About = ({ hackerMode = false }: AboutProps) => {
     >
       <div className="container mx-auto">
         <motion.h2 
-          className={`manga-title text-center mb-16 ${hackerMode ? 'text-neon-cyan' : 'text-manga-blue'}`}
+          className={`manga-title text-center mb-10 md:mb-16 ${hackerMode ? 'text-neon-cyan' : 'text-manga-blue'}`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -126,10 +128,10 @@ const About = ({ hackerMode = false }: AboutProps) => {
           {hackerMode ? 'IDENTITY SELECTION' : 'CHARACTER SELECT'}
         </motion.h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center">
           {/* Character Image */}
           <motion.div 
-            className={`panel p-4 relative overflow-hidden h-[500px] ${hackerMode ? 'border-neon-cyan bg-manga-black/70' : ''}`}
+            className={`panel p-4 relative overflow-hidden h-[350px] md:h-[500px] ${hackerMode ? 'border-neon-cyan bg-manga-black/70' : ''}`}
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -161,8 +163,8 @@ const About = ({ hackerMode = false }: AboutProps) => {
               </div>
             </div>
             
-            {/* Style selector buttons positioned over the image */}
-            <div className="absolute top-4 right-4 flex flex-col space-y-2">
+            {/* Style selector buttons positioned over the image - horizontal on mobile, vertical on desktop */}
+            <div className={`absolute top-4 ${isMobile ? 'left-4 right-4 flex justify-between' : 'right-4 flex flex-col space-y-2'}`}>
               <button 
                 className={`manga-button p-2 ${activeStyle === 'default' 
                   ? hackerMode ? 'bg-neon-pink text-manga-black' : 'bg-manga-red text-white' 
@@ -170,7 +172,7 @@ const About = ({ hackerMode = false }: AboutProps) => {
                 onClick={() => setActiveStyle('default')}
                 title="Developer Style"
               >
-                <Code size={20} />
+                <Code size={isMobile ? 18 : 20} />
               </button>
               <button 
                 className={`manga-button p-2 ${activeStyle === 'cyberpunk' 
@@ -179,7 +181,7 @@ const About = ({ hackerMode = false }: AboutProps) => {
                 onClick={() => setActiveStyle('cyberpunk')}
                 title="Cyberpunk Style"
               >
-                <Globe size={20} />
+                <Globe size={isMobile ? 18 : 20} />
               </button>
               <button 
                 className={`manga-button p-2 ${activeStyle === 'creative' 
@@ -188,28 +190,28 @@ const About = ({ hackerMode = false }: AboutProps) => {
                 onClick={() => setActiveStyle('creative')}
                 title="Creative Style"
               >
-                <PaintBucket size={20} />
+                <PaintBucket size={isMobile ? 18 : 20} />
               </button>
             </div>
           </motion.div>
           
           {/* Character Details */}
           <motion.div 
-            className="flex flex-col space-y-8"
+            className="flex flex-col space-y-6 md:space-y-8"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <div className={`panel p-6 ${hackerMode ? 'border-neon-pink bg-manga-black/70' : ''}`}>
-              <h3 className={`panel-title ${hackerMode ? 'text-neon-pink' : 'text-manga-red'} mb-4`}>
+            <div className={`panel p-5 md:p-6 ${hackerMode ? 'border-neon-pink bg-manga-black/70' : ''}`}>
+              <h3 className={`panel-title text-2xl md:text-3xl ${hackerMode ? 'text-neon-pink' : 'text-manga-red'} mb-3 md:mb-4`}>
                 {activeCharacter.name}
               </h3>
-              <p className={`font-manga text-lg mb-6 ${hackerMode ? 'text-neon-cyan' : ''}`}>
+              <p className={`font-manga text-base md:text-lg mb-4 md:mb-6 ${hackerMode ? 'text-neon-cyan' : ''}`}>
                 {activeCharacter.description}
               </p>
               
               <div className={`speech-bubble ${hackerMode ? 'border-neon-green bg-manga-black/70 text-neon-green' : ''}`}>
-                <p className={`${hackerMode ? 'font-mono' : 'font-sans'}`}>
+                <p className={`${hackerMode ? 'font-mono text-sm md:text-base' : 'font-sans text-sm md:text-base'}`}>
                   {hackerMode 
                     ? '> I transform concepts into digital realities through code and creative innovation.' 
                     : '"I transform ideas into digital experiences through clean code and creative design."'}
@@ -217,8 +219,8 @@ const About = ({ hackerMode = false }: AboutProps) => {
               </div>
             </div>
             
-            <div className={`panel p-6 ${hackerMode ? 'border-neon-cyan bg-manga-black/70' : ''}`}>
-              <h3 className={`panel-title ${hackerMode ? 'text-neon-cyan' : 'text-manga-yellow'} mb-4`}>
+            <div className={`panel p-5 md:p-6 ${hackerMode ? 'border-neon-cyan bg-manga-black/70' : ''}`}>
+              <h3 className={`panel-title text-2xl md:text-3xl ${hackerMode ? 'text-neon-cyan' : 'text-manga-yellow'} mb-3 md:mb-4`}>
                 {hackerMode ? 'TECH ABILITIES' : 'SKILLS & ABILITIES'}
               </h3>
               
@@ -226,8 +228,8 @@ const About = ({ hackerMode = false }: AboutProps) => {
                 {activeCharacter.skills.map((skill, index) => (
                   <div key={index}>
                     <div className="flex justify-between mb-1">
-                      <span className={`font-manga ${hackerMode ? 'text-neon-green' : ''}`}>{skill.name}</span>
-                      <span className={`font-manga ${hackerMode ? 'text-neon-green' : ''}`}>{skill.level}%</span>
+                      <span className={`font-manga text-sm md:text-base ${hackerMode ? 'text-neon-green' : ''}`}>{skill.name}</span>
+                      <span className={`font-manga text-sm md:text-base ${hackerMode ? 'text-neon-green' : ''}`}>{skill.level}%</span>
                     </div>
                     <div className={`exp-bar-container ${hackerMode ? 'border-neon-green' : ''}`}>
                       <motion.div 

@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, FileText, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useIsMobile } from '../hooks/use-mobile';
 
 interface HeroProps {
   onNavigate: (section: string) => void;
@@ -12,9 +13,12 @@ interface HeroProps {
 const Hero = ({ onNavigate, hackerMode = false }: HeroProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const soundEffectRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   
-  // Parallax effect on mouse move
+  // Parallax effect on mouse move (only on desktop)
   useEffect(() => {
+    if (isMobile) return;
+    
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
       
@@ -40,7 +44,7 @@ const Hero = ({ onNavigate, hackerMode = false }: HeroProps) => {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [isMobile]);
   
   // Sound effect on hover
   const playSoundEffect = () => {
@@ -87,7 +91,7 @@ const Hero = ({ onNavigate, hackerMode = false }: HeroProps) => {
   return (
     <div 
       ref={containerRef} 
-      className={`w-full min-h-screen flex flex-col items-center justify-center relative overflow-hidden ${hackerMode ? 'bg-manga-black' : ''}`}
+      className={`w-full min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-20 md:pt-0 ${hackerMode ? 'bg-manga-black' : ''}`}
     >
       {/* Enhanced background elements with parallax effect */}
       <div className="absolute inset-0">
@@ -97,7 +101,7 @@ const Hero = ({ onNavigate, hackerMode = false }: HeroProps) => {
         
         {/* Enhanced speed lines */}
         <div className="parallax-layer absolute inset-0 opacity-40">
-          {[...Array(30)].map((_, i) => (
+          {[...Array(isMobile ? 15 : 30)].map((_, i) => (
             <div 
               key={i}
               className={`absolute ${hackerMode ? 'bg-neon-cyan' : 'bg-manga-black'}`}
@@ -115,7 +119,7 @@ const Hero = ({ onNavigate, hackerMode = false }: HeroProps) => {
         
         {/* Dynamic manga dots */}
         <div className="parallax-layer absolute inset-0">
-          {[...Array(50)].map((_, i) => (
+          {[...Array(isMobile ? 25 : 50)].map((_, i) => (
             <div 
               key={i + 100}
               className={`absolute rounded-full ${hackerMode ? 'bg-neon-pink' : 'bg-manga-black'}`}
@@ -130,12 +134,12 @@ const Hero = ({ onNavigate, hackerMode = false }: HeroProps) => {
           ))}
         </div>
         
-        {/* Animated manga text floating in background */}
+        {/* Animated manga text floating in background (fewer on mobile) */}
         <div className="absolute inset-0 overflow-hidden opacity-10">
-          {[...Array(5)].map((_, i) => (
+          {[...Array(isMobile ? 2 : 5)].map((_, i) => (
             <motion.div
               key={i + 200}
-              className={`absolute font-manga text-9xl font-bold ${hackerMode ? 'text-neon-green' : 'text-manga-black'}`}
+              className={`absolute font-manga text-7xl md:text-9xl font-bold ${hackerMode ? 'text-neon-green' : 'text-manga-black'}`}
               initial={{ y: -100, x: Math.random() * 100 - 50, opacity: 0.1 }}
               animate={{ 
                 y: window.innerHeight + 100,
@@ -161,7 +165,7 @@ const Hero = ({ onNavigate, hackerMode = false }: HeroProps) => {
       <div className="container mx-auto px-4 z-10">
         <div className="flex flex-col items-center">
           <motion.div 
-            className={`panel p-8 mb-8 max-w-3xl w-full clip-panel relative ${hackerMode ? 'border-neon-cyan bg-manga-black/80' : ''}`}
+            className={`panel p-6 md:p-8 mb-8 max-w-3xl w-full clip-panel relative ${hackerMode ? 'border-neon-cyan bg-manga-black/80' : ''}`}
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
@@ -183,7 +187,7 @@ const Hero = ({ onNavigate, hackerMode = false }: HeroProps) => {
             </motion.div>
             
             <motion.h1 
-              className={`manga-title ${hackerMode ? 'text-neon-cyan' : 'text-manga-blue'} mb-4`}
+              className={`manga-title text-4xl md:text-5xl lg:text-6xl ${hackerMode ? 'text-neon-cyan' : 'text-manga-blue'} mb-4`}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
@@ -193,12 +197,12 @@ const Hero = ({ onNavigate, hackerMode = false }: HeroProps) => {
             </motion.h1>
             
             <motion.div 
-              className={`speech-bubble mb-8 ${hackerMode ? 'border-neon-pink bg-manga-black/70' : ''}`}
+              className={`speech-bubble mb-6 md:mb-8 ${hackerMode ? 'border-neon-pink bg-manga-black/70' : ''}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.5 }}
             >
-              <p className={`font-manga text-xl text-center ${hackerMode ? 'text-neon-green' : ''}`}>
+              <p className={`font-manga text-lg md:text-xl text-center ${hackerMode ? 'text-neon-green' : ''}`}>
                 {hackerMode 
                   ? 'Welcome to the cyber dimension. Hack into my digital portfolio to discover encrypted skills and projects.'
                   : 'Welcome to my manga-inspired portfolio! Turn the pages to discover my story, skills, and creations.'}
@@ -244,31 +248,11 @@ const Hero = ({ onNavigate, hackerMode = false }: HeroProps) => {
                 <FileText size={18} />
                 {hackerMode ? 'DOWNLOAD DATA FILE' : 'DOWNLOAD RESUME'}
               </motion.button>
-              
-              <motion.button 
-                className={`manga-button flex items-center gap-2 ${hackerMode ? 'border-neon-pink text-neon-pink' : 'border-manga-yellow bg-transparent text-manga-black'}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.4, duration: 0.5 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  // Play sound effect
-                  const audio = new Audio(hackerMode
-                    ? 'https://www.soundjay.com/technology/sounds/electronic-1.mp3'
-                    : 'https://www.soundjay.com/mechanical/sounds/page-flip-02a.mp3');
-                  audio.play().catch(e => console.log('Audio play failed:', e));
-                }}
-              >
-                <Link to="/projects" className="flex items-center gap-2">
-                  {hackerMode ? 'ALL SYSTEM PROJECTS' : 'VIEW ALL PROJECTS'}
-                </Link>
-              </motion.button>
             </div>
           </motion.div>
           
           <motion.div
-            className="mt-12"
+            className="mt-8 md:mt-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2, duration: 0.5 }}

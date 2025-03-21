@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Code, Play, X, Zap, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { projectsData } from '../data/projectsData';
+import { useIsMobile } from '../hooks/use-mobile';
 
 interface ProjectsProps {
   hackerMode?: boolean;
@@ -13,6 +14,7 @@ interface ProjectsProps {
 const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [battleAnimation, setBattleAnimation] = useState(false);
+  const isMobile = useIsMobile();
   
   // Filter projects based on limit
   const projects = limit ? projectsData.slice(0, limit) : projectsData;
@@ -49,7 +51,7 @@ const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
     <div className={`min-h-screen py-24 px-4 ${hackerMode ? 'bg-manga-black/50' : ''}`}>
       <div className="container mx-auto">
         <motion.h2 
-          className={`manga-title text-center mb-16 ${hackerMode ? 'text-neon-pink' : 'text-manga-red'}`}
+          className={`manga-title text-center mb-10 md:mb-16 ${hackerMode ? 'text-neon-pink' : 'text-manga-red'}`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -57,11 +59,11 @@ const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
           {hackerMode ? 'DIGITAL MISSIONS' : 'ADVENTURES & BATTLES'}
         </motion.h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {projects.map((project, index) => (
             <motion.div 
               key={project.id}
-              className={`manga-card overflow-hidden cursor-pointer h-96 ${hackerMode ? 'border-neon-cyan bg-manga-black/60' : ''}`}
+              className={`manga-card overflow-hidden cursor-pointer h-80 md:h-96 ${hackerMode ? 'border-neon-cyan bg-manga-black/60' : ''}`}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -79,22 +81,22 @@ const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
                   alt={project.title} 
                   className={`w-full h-full object-cover ${hackerMode ? 'opacity-70 hue-rotate-180' : ''}`}
                 />
-                <div className={`absolute inset-0 bg-gradient-to-t ${hackerMode ? 'from-manga-black/90' : 'from-manga-black/80'} to-transparent p-6 flex flex-col justify-end`}>
-                  <h3 className={`panel-title text-white mb-2 ${hackerMode ? 'text-neon-cyan' : ''}`}>
+                <div className={`absolute inset-0 bg-gradient-to-t ${hackerMode ? 'from-manga-black/90' : 'from-manga-black/80'} to-transparent p-4 md:p-6 flex flex-col justify-end`}>
+                  <h3 className={`panel-title text-xl md:text-2xl text-white mb-2 ${hackerMode ? 'text-neon-cyan' : ''}`}>
                     {project.title}
                   </h3>
-                  <p className="text-white mb-4">
+                  <p className="text-white text-sm md:text-base mb-4 line-clamp-2">
                     {project.description}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {project.technologies.slice(0, 3).map((tech, i) => (
-                      <span key={i} className={`${hackerMode ? 'bg-neon-green text-manga-black' : 'bg-manga-yellow text-manga-black'} px-2 py-1 rounded-full text-sm font-bold`}>
+                    {project.technologies.slice(0, isMobile ? 2 : 3).map((tech, i) => (
+                      <span key={i} className={`${hackerMode ? 'bg-neon-green text-manga-black' : 'bg-manga-yellow text-manga-black'} px-2 py-1 rounded-full text-xs md:text-sm font-bold`}>
                         {tech}
                       </span>
                     ))}
-                    {project.technologies.length > 3 && (
-                      <span className={`${hackerMode ? 'bg-neon-green text-manga-black' : 'bg-manga-yellow text-manga-black'} px-2 py-1 rounded-full text-sm font-bold`}>
-                        +{project.technologies.length - 3}
+                    {project.technologies.length > (isMobile ? 2 : 3) && (
+                      <span className={`${hackerMode ? 'bg-neon-green text-manga-black' : 'bg-manga-yellow text-manga-black'} px-2 py-1 rounded-full text-xs md:text-sm font-bold`}>
+                        +{project.technologies.length - (isMobile ? 2 : 3)}
                       </span>
                     )}
                   </div>
@@ -106,7 +108,7 @@ const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
         
         {limit && (
           <motion.div 
-            className="flex justify-center mt-12"
+            className="flex justify-center mt-10 md:mt-12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
@@ -146,7 +148,7 @@ const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
             <div className="relative w-full h-full flex items-center justify-center">
               {/* Battle effects */}
               <motion.div
-                className={`absolute font-manga text-8xl ${hackerMode ? 'text-neon-cyan' : 'text-manga-red'}`}
+                className={`absolute font-manga text-5xl md:text-8xl ${hackerMode ? 'text-neon-cyan' : 'text-manga-red'}`}
                 initial={{ scale: 0, rotate: -20 }}
                 animate={{ scale: [0, 1.5, 0], rotate: [-20, 0, 20], opacity: [0, 1, 0] }}
                 transition={{ duration: 0.8 }}
@@ -155,7 +157,7 @@ const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
               </motion.div>
               
               {/* Energy blasts */}
-              {[...Array(20)].map((_, i) => (
+              {[...Array(isMobile ? 10 : 20)].map((_, i) => (
                 <motion.div 
                   key={i}
                   className={`absolute w-1 h-20 ${hackerMode ? 'bg-neon-green' : 'bg-manga-yellow'} rounded-full`}
@@ -215,7 +217,7 @@ const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
                       <X size={24} />
                     </button>
                     
-                    <div className="h-64 relative">
+                    <div className="h-48 md:h-64 relative">
                       <img 
                         src={project.image} 
                         alt={project.title} 
@@ -223,61 +225,61 @@ const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-manga-black/80 to-transparent" />
                       <div className="absolute bottom-0 left-0 p-6">
-                        <h3 className={`panel-title ${hackerMode ? 'text-neon-cyan' : 'text-white'} mb-2`}>
+                        <h3 className={`panel-title text-2xl md:text-3xl ${hackerMode ? 'text-neon-cyan' : 'text-white'} mb-2`}>
                           {project.title}
                         </h3>
                       </div>
                     </div>
                     
-                    <div className={`p-6 ${hackerMode ? 'text-white' : ''}`}>
-                      <div className={`panel p-4 mb-6 ${hackerMode ? 'border-neon-green bg-manga-black/70' : ''}`}>
-                        <h4 className={`font-manga text-xl mb-2 ${hackerMode ? 'text-neon-green' : ''}`}>
+                    <div className={`p-4 md:p-6 ${hackerMode ? 'text-white' : ''}`}>
+                      <div className={`panel p-3 md:p-4 mb-4 md:mb-6 ${hackerMode ? 'border-neon-green bg-manga-black/70' : ''}`}>
+                        <h4 className={`font-manga text-lg md:text-xl mb-2 ${hackerMode ? 'text-neon-green' : ''}`}>
                           {hackerMode ? 'MISSION DETAILS' : 'PROJECT DETAILS'}
                         </h4>
-                        <p>{project.details}</p>
+                        <p className="text-sm md:text-base">{project.details}</p>
                       </div>
                       
-                      <div className="mb-6">
-                        <h4 className={`font-manga text-xl mb-2 ${hackerMode ? 'text-neon-pink' : ''}`}>
+                      <div className="mb-4 md:mb-6">
+                        <h4 className={`font-manga text-lg md:text-xl mb-2 ${hackerMode ? 'text-neon-pink' : ''}`}>
                           {hackerMode ? 'TECH STACK' : 'TECHNOLOGIES'}
                         </h4>
                         <div className="flex flex-wrap gap-2">
                           {project.technologies.map((tech, i) => (
                             <span key={i} className={`${
                               hackerMode ? 'bg-neon-green text-manga-black' : 'bg-manga-yellow text-manga-black'
-                            } px-3 py-1 rounded-full text-sm font-bold`}>
+                            } px-2 py-1 rounded-full text-xs md:text-sm font-bold`}>
                               {tech}
                             </span>
                           ))}
                         </div>
                       </div>
                       
-                      <div className="flex gap-4">
+                      <div className="flex flex-wrap gap-3 md:gap-4">
                         <a 
                           href={project.links.live} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className={`manga-button flex items-center gap-2 ${
+                          className={`manga-button flex items-center gap-2 text-sm md:text-base ${
                             hackerMode ? 'bg-neon-cyan text-manga-black' : ''
                           }`}
                         >
-                          {hackerMode ? <Zap size={20} /> : <Play size={20} />}
+                          {hackerMode ? <Zap size={16} /> : <Play size={16} />}
                           <span>{hackerMode ? 'Launch System' : 'Live Demo'}</span>
                         </a>
                         <a 
                           href={project.links.code} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className={`manga-button flex items-center gap-2 ${
+                          className={`manga-button flex items-center gap-2 text-sm md:text-base ${
                             hackerMode ? 'border-neon-pink text-neon-pink' : ''
                           }`}
                         >
-                          <Code size={20} />
+                          <Code size={16} />
                           <span>{hackerMode ? 'Source Code' : 'View Code'}</span>
                         </a>
                         <Link 
                           to={`/project/${project.id}`} 
-                          className={`manga-button flex items-center gap-2 ${
+                          className={`manga-button flex items-center gap-2 text-sm md:text-base ${
                             hackerMode ? 'bg-neon-green text-manga-black' : 'bg-manga-blue text-white'
                           }`}
                           onClick={(e) => {
@@ -288,8 +290,8 @@ const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
                             audio.play().catch(e => console.log('Audio play failed:', e));
                           }}
                         >
-                          <ExternalLink size={20} />
-                          <span>{hackerMode ? 'DETAILED ANALYSIS' : 'Full Details'}</span>
+                          <ExternalLink size={16} />
+                          <span>{hackerMode ? 'DETAILS' : 'Full Details'}</span>
                         </Link>
                       </div>
                     </div>

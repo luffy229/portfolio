@@ -126,7 +126,7 @@ const Projects = ({ hackerMode = false, limit }: ProjectsProps) => {
                   audio.play().catch(e => console.log('Audio play failed:', e));
                 }}
               >
-                {hackerMode ? 'VIEW ALL MISSIONS' : 'VIEW ALL ADVENTURES'} 
+                {hackerMode ? 'VIEW ALL MISSIONS' : 'VIEW ADVENTURES'} 
                 <ArrowRight size={18} />
               </motion.button>
             </Link>

@@ -1,8 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Filter, Zap } from 'lucide-react';
-import Projects from '../components/Projects';
+import { ArrowLeft, Filter, Zap, Clock, Star, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { projectsData } from '../data/projectsData';
@@ -11,6 +10,7 @@ const AllProjects = () => {
   const [hackerMode, setHackerMode] = useState(false);
   const [filter, setFilter] = useState<string | null>(null);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [sortOption, setSortOption] = useState<string>('default');
   const { toast } = useToast();
 
   // Get unique tech categories from all projects
@@ -59,6 +59,40 @@ const AllProjects = () => {
           : "Showing all projects",
         variant: "default",
       });
+    }
+  };
+
+  // Sort projects
+  const sortProjects = (projects: typeof projectsData) => {
+    switch (sortOption) {
+      case 'newest':
+        return [...projects].sort((a, b) => b.id - a.id);
+      case 'oldest':
+        return [...projects].sort((a, b) => a.id - b.id);
+      case 'alphabetical':
+        return [...projects].sort((a, b) => a.title.localeCompare(b.title));
+      default:
+        return projects;
+    }
+  };
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5 }
     }
   };
   
@@ -132,69 +166,116 @@ const AllProjects = () => {
               </motion.button>
             </Link>
             
-            <div className="relative">
-              <motion.button
-                className={`manga-button flex items-center gap-2 ${
-                  hackerMode ? 'bg-neon-pink text-manga-black' : 'bg-manga-blue text-white'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={toggleFilterMenu}
-              >
-                {filter ? (
-                  <Zap size={18} />
-                ) : (
-                  <Filter size={18} />
-                )}
-                <span>
-                  {filter 
-                    ? (hackerMode ? `${filter.toUpperCase()} ONLY` : `Filter: ${filter}`) 
-                    : (hackerMode ? 'APPLY FILTER' : 'Filter Projects')}
-                </span>
-              </motion.button>
-              
-              {/* Filter Menu */}
-              {showFilterMenu && (
-                <motion.div
-                  className={`absolute right-0 mt-2 w-64 z-50 manga-card overflow-hidden ${
-                    hackerMode ? 'bg-manga-black border border-neon-cyan' : 'bg-white'
+            <div className="flex gap-2">
+              {/* Sort dropdown */}
+              <div className="relative">
+                <motion.button
+                  className={`manga-button flex items-center gap-2 ${
+                    hackerMode ? 'bg-neon-green text-manga-black' : 'bg-manga-blue text-white'
                   }`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    const audio = new Audio(hackerMode
+                      ? 'https://www.soundjay.com/technology/sounds/electronic-1.mp3'
+                      : 'https://www.soundjay.com/mechanical/sounds/page-flip-01a.mp3');
+                    audio.play().catch(e => console.log('Audio play failed:', e));
+                    setSortOption(prev => 
+                      prev === 'default' ? 'newest' :
+                      prev === 'newest' ? 'oldest' :
+                      prev === 'oldest' ? 'alphabetical' : 'default'
+                    );
+                  }}
                 >
-                  <div className={`p-4 ${hackerMode ? 'border-b border-neon-cyan' : 'border-b'}`}>
-                    <h3 className={`font-manga text-lg ${hackerMode ? 'text-neon-cyan' : ''}`}>
-                      {hackerMode ? 'SELECT TECHNOLOGY' : 'Filter by Technology'}
-                    </h3>
-                  </div>
-                  <div className="p-4 max-h-60 overflow-y-auto">
-                    <div 
-                      className={`mb-2 cursor-pointer p-2 rounded ${
-                        filter === null 
-                          ? (hackerMode ? 'bg-neon-green text-manga-black' : 'bg-manga-yellow text-manga-black') 
-                          : (hackerMode ? 'hover:bg-manga-black/30' : 'hover:bg-gray-100')
-                      }`}
-                      onClick={() => applyFilter(null)}
-                    >
-                      {hackerMode ? 'SHOW ALL MISSIONS' : 'Show All Projects'}
+                  {sortOption === 'newest' ? (
+                    <>
+                      <Clock size={18} />
+                      <span>{hackerMode ? 'NEWEST FIRST' : 'Newest First'}</span>
+                    </>
+                  ) : sortOption === 'oldest' ? (
+                    <>
+                      <Clock size={18} />
+                      <span>{hackerMode ? 'OLDEST FIRST' : 'Oldest First'}</span>
+                    </>
+                  ) : sortOption === 'alphabetical' ? (
+                    <>
+                      <Star size={18} />
+                      <span>{hackerMode ? 'ALPHABETICAL' : 'A-Z Order'}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Award size={18} />
+                      <span>{hackerMode ? 'DEFAULT ORDER' : 'Featured Order'}</span>
+                    </>
+                  )}
+                </motion.button>
+              </div>
+              
+              {/* Filter button */}
+              <div className="relative">
+                <motion.button
+                  className={`manga-button flex items-center gap-2 ${
+                    hackerMode ? 'bg-neon-pink text-manga-black' : 'bg-manga-red text-white'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={toggleFilterMenu}
+                >
+                  {filter ? (
+                    <Zap size={18} />
+                  ) : (
+                    <Filter size={18} />
+                  )}
+                  <span>
+                    {filter 
+                      ? (hackerMode ? `${filter.toUpperCase()} ONLY` : `Filter: ${filter}`) 
+                      : (hackerMode ? 'APPLY FILTER' : 'Filter Projects')}
+                  </span>
+                </motion.button>
+                
+                {/* Filter Menu */}
+                {showFilterMenu && (
+                  <motion.div
+                    className={`absolute right-0 mt-2 w-64 z-50 manga-card overflow-hidden ${
+                      hackerMode ? 'bg-manga-black border border-neon-cyan' : 'bg-white'
+                    }`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className={`p-4 ${hackerMode ? 'border-b border-neon-cyan' : 'border-b'}`}>
+                      <h3 className={`font-manga text-lg ${hackerMode ? 'text-neon-cyan' : ''}`}>
+                        {hackerMode ? 'SELECT TECHNOLOGY' : 'Filter by Technology'}
+                      </h3>
                     </div>
-                    {allTechnologies.map(tech => (
+                    <div className="p-4 max-h-60 overflow-y-auto">
                       <div 
-                        key={tech}
                         className={`mb-2 cursor-pointer p-2 rounded ${
-                          filter === tech 
+                          filter === null 
                             ? (hackerMode ? 'bg-neon-green text-manga-black' : 'bg-manga-yellow text-manga-black') 
                             : (hackerMode ? 'hover:bg-manga-black/30' : 'hover:bg-gray-100')
                         }`}
-                        onClick={() => applyFilter(tech)}
+                        onClick={() => applyFilter(null)}
                       >
-                        {tech}
+                        {hackerMode ? 'SHOW ALL MISSIONS' : 'Show All Projects'}
                       </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
+                      {allTechnologies.map(tech => (
+                        <div 
+                          key={tech}
+                          className={`mb-2 cursor-pointer p-2 rounded ${
+                            filter === tech 
+                              ? (hackerMode ? 'bg-neon-green text-manga-black' : 'bg-manga-yellow text-manga-black') 
+                              : (hackerMode ? 'hover:bg-manga-black/30' : 'hover:bg-gray-100')
+                          }`}
+                          onClick={() => applyFilter(tech)}
+                        >
+                          {tech}
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
             </div>
           </div>
           
@@ -216,16 +297,19 @@ const AllProjects = () => {
         </motion.div>
         
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projectsData
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {sortProjects(projectsData)
             .filter(project => filter ? project.technologies.includes(filter) : true)
             .map((project, index) => (
               <motion.div 
                 key={project.id}
                 className={`manga-card overflow-hidden cursor-pointer h-96 ${hackerMode ? 'border-neon-cyan bg-manga-black/60' : ''}`}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                variants={itemVariants}
                 whileHover={{ 
                   scale: 1.02,
                   boxShadow: hackerMode 
@@ -234,6 +318,12 @@ const AllProjects = () => {
                 }}
               >
                 <Link to={`/project/${project.id}`} className="block relative h-full">
+                  <div className={`absolute top-0 right-0 z-10 m-3 ${
+                    hackerMode ? 'bg-neon-cyan text-manga-black' : 'bg-manga-yellow text-manga-black'
+                  } px-2 py-1 rounded-full text-sm font-bold flex items-center gap-1`}>
+                    <span>#{project.id}</span>
+                  </div>
+                  
                   <img 
                     src={project.image} 
                     alt={project.title} 
@@ -243,7 +333,7 @@ const AllProjects = () => {
                     <h3 className={`panel-title text-white mb-2 ${hackerMode ? 'text-neon-cyan' : ''}`}>
                       {hackerMode ? project.hackerModeTitle || project.title : project.title}
                     </h3>
-                    <p className="text-white mb-4">
+                    <p className="text-white mb-4 line-clamp-2">
                       {hackerMode ? project.hackerModeDescription || project.description : project.description}
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -266,7 +356,7 @@ const AllProjects = () => {
                 </Link>
               </motion.div>
             ))}
-        </div>
+        </motion.div>
         
         {/* No results message */}
         {filter && projectsData.filter(project => project.technologies.includes(filter)).length === 0 && (

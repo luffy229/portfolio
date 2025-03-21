@@ -21,7 +21,7 @@ export const projectsData = [
     ],
     challenges: 'The main challenges were integrating multiple payment providers and building a responsive interface that worked across all devices.',
     hackerModeChallenges: 'Breaking through legacy security protocols while maintaining the integrity of the transaction flow was the primary mission objective.',
-    solutions: 'We implemented a modular architecture that allows for easy integration of new payment methods and used React's Context API for state management.',
+    solutions: 'We implemented a modular architecture that allows for easy integration of new payment methods and used React\'s Context API for state management.',
     hackerModeSolutions: 'Developed a custom bypass algorithm that allowed for seamless authentication while maintaining full encryption throughout the pipeline.'
   },
   {
